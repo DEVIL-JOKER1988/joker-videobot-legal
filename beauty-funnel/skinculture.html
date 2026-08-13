@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SkinCulture – Haut-Check Konzept-Demo</title>
+<style>
+:root{--bg:#f7f3ee;--card:#fffdf9;--ink:#24211e;--muted:#6f675f;--line:#e7ded4;--accent:#9a7960;--ok:#4f6b57}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:760px;margin:auto;padding:18px 16px 60px}.demo{font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:#efe6dd;border:1px solid var(--line);padding:8px 12px;border-radius:999px;display:inline-block}
+header{padding:26px 2px 18px}.brand{font-family:Georgia,serif;font-size:22px;letter-spacing:.04em;margin:16px 0 28px}
+h1{font-family:Georgia,serif;font-weight:500;font-size:clamp(38px,9vw,62px);line-height:.98;margin:0 0 18px}
+.lead{font-size:18px;line-height:1.55;color:var(--muted);max-width:640px}.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px;margin:18px 0;box-shadow:0 14px 40px rgba(70,52,38,.06)}
+.eyebrow{font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);font-weight:700}h2{font-family:Georgia,serif;font-weight:500;font-size:30px;margin:8px 0 10px}
+.small{color:var(--muted);font-size:14px;line-height:1.5}.progress{height:8px;background:#eee6de;border-radius:999px;overflow:hidden;margin:18px 0 6px}.bar{height:100%;width:25%;background:var(--accent);transition:.25s}
+.option{display:block;width:100%;text-align:left;padding:15px 16px;margin:9px 0;border-radius:16px;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:16px;cursor:pointer}
+.option:hover,.option.selected{border-color:var(--accent);background:#f5ede6}.actions{display:flex;gap:10px;margin-top:18px}
+.primary{border:0;background:var(--ink);color:#fff;padding:14px 18px;border-radius:14px;font-weight:700;text-decoration:none;cursor:pointer;display:inline-flex;justify-content:center;align-items:center}
+.secondary{border:1px solid var(--line);background:#fff;color:var(--ink);padding:14px 18px;border-radius:14px;cursor:pointer}
+.trust{display:grid;grid-template-columns:1fr 1fr;gap:12px}.pill{border:1px solid var(--line);border-radius:18px;padding:15px;background:#fff}.pill b{font-size:20px;display:block;margin-bottom:4px}
+.result{display:none}.result.show{display:block}.tag{display:inline-block;padding:7px 10px;border-radius:999px;background:#edf2ee;color:var(--ok);font-size:13px;font-weight:700;margin-bottom:12px}
+.recommendation{padding:16px;border-left:4px solid var(--accent);background:#f8f0e9;border-radius:0 14px 14px 0;margin:16px 0}.price{font-size:15px;color:var(--muted)}
+footer{font-size:12px;color:var(--muted);line-height:1.5;padding-top:18px}@media(max-width:540px){.trust{grid-template-columns:1fr}.actions{flex-direction:column}.actions>*{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<span class="demo">Konzept-Demo · nicht offiziell</span>
+<header><div class="brand">SkinCulture</div><h1>Welche Behandlung braucht deine Haut wirklich?</h1>
+<p class="lead">Beantworte 4 kurze Fragen. Danach erhältst du eine passende Behandlungskategorie statt dich durch eine lange Preisliste zu suchen.</p></header>
+
+<div class="card" id="quizCard">
+<div class="eyebrow">60-Sekunden Haut-Check</div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="small" id="stepLabel">Frage 1 von 4</div>
+<h2 id="question"></h2><div id="options"></div>
+<div class="actions"><button class="secondary" id="backBtn" onclick="back()">Zurück</button><button class="primary" id="nextBtn" onclick="next()">Weiter</button></div>
+</div>
+
+<div class="card result" id="result">
+<span class="tag">Deine Empfehlung</span><h2 id="resultTitle"></h2><p id="resultText" class="lead" style="font-size:17px"></p>
+<div class="recommendation"><b id="treatment"></b><div class="price" id="price"></div></div>
+<p class="small">Die endgültige Behandlung sollte immer nach persönlicher Hautanalyse durch das Studio bestätigt werden.</p>
+<div class="actions"><a class="primary" href="https://www.skinculture.at/book-online" target="_blank" rel="noopener">Passenden Termin ansehen</a>
+<button class="secondary" onclick="restart()">Haut-Check neu starten</button></div></div>
+
+<div class="card"><div class="eyebrow">Warum SkinCulture?</div><h2>Vertrauen vor der Buchung</h2>
+<div class="trust"><div class="pill"><b>4,9 ★</b><span class="small">Bewertung auf Treatwell</span></div>
+<div class="pill"><b>15+ Jahre</b><span class="small">Erfahrung der Inhaberin laut Salonprofil</span></div>
+<div class="pill"><b>Individuell</b><span class="small">Behandlungen nach Hautbedürfnis</span></div>
+<div class="pill"><b>Wien 1020</b><span class="small">Bruno-Marek-Allee</span></div></div></div>
+
+<div class="card"><div class="eyebrow">Funnel-Idee</div><h2>Weniger Auswahlstress. Mehr klare nächste Schritte.</h2>
+<p class="small">Anzeige → Haut-Check → persönliche Kategorie → Behandlung → Termin. Diese Demo zeigt nur die Verkaufslogik und ist kein offizielles Angebot von SkinCulture.</p></div>
+
+<footer>Konzept-Demo für eine mögliche Marketing-Zusammenarbeit. Angaben zu Leistungen/Preisen basieren auf öffentlich zugänglichen SkinCulture-/Treatwell-Informationen und sollten vor Live-Verwendung vom Betrieb freigegeben werden.</footer>
+</div>
+
+<script>
+const qs=[
+{q:"Was möchtest du an deiner Haut am meisten verbessern?",opts:["Trockenheit / Spannungsgefühl","Unreinheiten / verstopfte Poren","Feine Linien / Straffung","Pigmentflecken / unruhiger Teint"]},
+{q:"Wie fühlt sich deine Haut meistens an?",opts:["Trocken","Ölig / glänzend","Mischhaut","Empfindlich / reaktiv"]},
+{q:"Wie intensiv soll deine Behandlung sein?",opts:["Sanft & entspannend","Gründlich & tiefenreinigend","Aktiv & erneuernd","Ich bin unsicher"]},
+{q:"Was ist dir wichtiger?",opts:["Sofort mehr Glow","Langfristig reineres Hautbild","Anti-Aging / Straffung","Professionelle Empfehlung"]}
+];
+let step=0,answers=[];
+const qEl=document.getElementById("question"),oEl=document.getElementById("options");
+function render(){
+document.getElementById("stepLabel").textContent=`Frage ${step+1} von ${qs.length}`;
+document.getElementById("bar").style.width=`${((step+1)/qs.length)*100}%`;
+qEl.textContent=qs[step].q;oEl.innerHTML="";
+qs[step].opts.forEach((x,i)=>{const b=document.createElement("button");b.className="option"+(answers[step]===i?" selected":"");b.textContent=x;b.onclick=()=>{answers[step]=i;render()};oEl.appendChild(b)});
+document.getElementById("backBtn").style.visibility=step===0?"hidden":"visible";
+document.getElementById("nextBtn").textContent=step===qs.length-1?"Ergebnis":"Weiter";
+}
+function next(){if(answers[step]===undefined){alert("Bitte wähle eine Antwort aus.");return}if(step<qs.length-1){step++;render()}else showResult()}
+function back(){if(step>0){step--;render()}}
+function showResult(){
+document.getElementById("quizCard").style.display="none";const r=document.getElementById("result");r.classList.add("show");
+const first=answers[0],last=answers[3];let title,text,treatment,price;
+if(first===1||last===1){title="Reinigung & Hautklärung";text="Deine Antworten sprechen für einen Fokus auf gründliche Reinigung, Poren und ein ausgeglicheneres Hautbild.";treatment="Klassische Reinigung / Akne-orientierte Behandlung";price="Beispiel aus dem aktuellen Angebot: ca. 85–99 €"}
+else if(first===2||last===2){title="Anti-Aging & Hauterneuerung";text="Deine Antworten sprechen für eine aktivere Behandlung mit Fokus auf Straffung, Hauterneuerung und sichtbare Frische.";treatment="Age Summum / Radiofrequenz / erneuernde Behandlung";price="Beispiel aus dem aktuellen Angebot: ca. 150–300 €+"}
+else if(first===3){title="Peeling & ebenmäßiger Teint";text="Deine Antworten sprechen für einen Fokus auf Hauterneuerung und einen gleichmäßigeren, klareren Teint.";treatment="PRXT33 / BioRePeel / Fruchtsäure-Peeling";price="Beispiel aus dem aktuellen Angebot: ca. 80–150 €"}
+else{title="Hydration & Glow";text="Deine Antworten sprechen für eine feuchtigkeitsspendende Behandlung, die die Haut reinigt und sichtbar frischer wirken lässt.";treatment="Hydradermie / Pura Facial / Hydrofacial";price="Beispiel aus dem aktuellen Angebot: ca. 95–150 €"}
+document.getElementById("resultTitle").textContent=title;document.getElementById("resultText").textContent=text;document.getElementById("treatment").textContent=treatment;document.getElementById("price").textContent=price;r.scrollIntoView({behavior:"smooth"});
+}
+function restart(){step=0;answers=[];document.getElementById("quizCard").style.display="block";document.getElementById("result").classList.remove("show");render();window.scrollTo({top:0,behavior:"smooth"})}
+render();
+</script>
+</body></html>
