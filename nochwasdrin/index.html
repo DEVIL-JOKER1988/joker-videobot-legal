@@ -1,1 +1,93 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#080b0e"><title>Noch was drin?</title><script>location.replace('./landing.html'+location.search+location.hash)</script></head><body style="margin:0;background:#080b0e;color:#fff;font-family:system-ui"></body></html>
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080b0e">
+<title>Noch was drin? | Finanzierungs-Check Österreich</title>
+<meta name="description" content="Schon abgelehnt? Prüfe in rund 60 Sekunden unverbindlich, ob sich eine persönliche Finanzierungsprüfung lohnt.">
+<link rel="canonical" href="https://nochwasdrin.pages.dev/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_AT">
+<meta property="og:site_name" content="Noch was drin?">
+<meta property="og:url" content="https://nochwasdrin.pages.dev/">
+<meta property="og:title" content="Schon abgelehnt? Vielleicht ist noch was drin.">
+<meta property="og:description" content="Finanzierungs-Check für Österreich · rund 60 Sekunden · unverbindliche Vorprüfung.">
+<meta property="og:image" content="https://nochwasdrin.pages.dev/share-card">
+<meta property="og:image:secure_url" content="https://nochwasdrin.pages.dev/share-card">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Noch was drin? – Schon abgelehnt? Vielleicht ist noch was drin.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Schon abgelehnt? Vielleicht ist noch was drin.">
+<meta name="twitter:description" content="Finanzierungs-Check für Österreich · rund 60 Sekunden · unverbindlich.">
+<meta name="twitter:image" content="https://nochwasdrin.pages.dev/share-card">
+<style>
+html,body{margin:0;width:100%;height:100%;background:#080b0e;overflow:hidden}
+#site{width:100%;height:100%;border:0;display:block;background:#080b0e}
+</style>
+</head>
+<body>
+<iframe id="site" src="/landing.html" title="Noch was drin? Finanzierungs-Check"></iframe>
+<script>
+const frame=document.getElementById('site');
+frame.addEventListener('load',()=>{
+  const w=frame.contentWindow;
+  const d=frame.contentDocument;
+  if(!w||!d) return;
+  w.result=function(){
+    const form=d.getElementById('q');
+    const progress=d.querySelector('.progress');
+    const box=d.getElementById('result');
+    if(form) form.style.display='none';
+    if(progress) progress.style.display='none';
+    if(box) box.classList.add('show');
+    const badge=d.getElementById('badge');
+    const rt=d.getElementById('rt');
+    const rp=d.getElementById('rp');
+    if(badge) badge.textContent='Persönliche Prüfung';
+    if(rt) rt.textContent='Deine Angaben sind vollständig.';
+    if(rp) rp.textContent='Der Online-Check trifft keine Kreditentscheidung. Wenn du möchtest, können deine Angaben jetzt an einen zuständigen Finanzierungspartner zur persönlichen Prüfung weitergegeben werden.';
+  };
+  const textOf=(name)=>{
+    const e=d.querySelector('input[name="'+name+'"]:checked');
+    return e ? e.parentElement.textContent.trim() : '';
+  };
+  w.submitLead=async function(){
+    const fn=d.getElementById('fn'), ph=d.getElementById('ph'), zip=d.getElementById('zip'), em=d.getElementById('em'), cons=d.getElementById('cons');
+    if(!fn?.value.trim()||!ph?.value.trim()||!zip?.value.trim()){w.alert('Bitte Vorname, Telefon und PLZ ausfüllen.');return}
+    if(!cons?.checked){w.alert('Bitte zuerst der Verarbeitung deiner Angaben zustimmen.');return}
+    const btn=d.querySelector('.submit');
+    const old=btn?.textContent||'Persönliche Prüfung anfordern →';
+    if(btn){btn.disabled=true;btn.textContent='Wird sicher übermittelt …'}
+    const payload={
+      source:'nochwasdrin.pages.dev',
+      pageVersion:'2026-08-20',
+      contact:{firstName:fn.value.trim(),phone:ph.value.trim(),zip:zip.value.trim(),email:em?.value.trim()||''},
+      answers:{
+        netIncome:textOf('income'),incomeType:textOf('type'),employmentDuration:textOf('emp'),requestedAmount:textOf('amt'),
+        existingObligations:textOf('debt'),paymentProblems:textOf('pay'),creditFile:textOf('ksv'),gamblingTransactions:textOf('game'),
+        housingCosts:textOf('home'),coApplicant:textOf('co')
+      },
+      consent:true
+    };
+    try{
+      const r=await fetch('/api/lead',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
+      const data=await r.json().catch(()=>({}));
+      if(!r.ok||!data.ok) throw new Error(data.error||'Übertragung fehlgeschlagen');
+      const h=d.querySelector('.form h3');
+      if(h) h.textContent='Anfrage erfolgreich übermittelt.';
+      const grid=d.querySelector('.grid'); if(grid) grid.style.display='none';
+      const c=d.querySelector('.cons'); if(c) c.style.display='none';
+      if(btn){btn.textContent='✓ Erfolgreich übermittelt';btn.disabled=true}
+    }catch(e){
+      if(btn){btn.disabled=false;btn.textContent=old}
+      w.alert('Die sichere Übermittlung ist noch nicht vollständig eingerichtet. Bitte später erneut versuchen.');
+    }
+  };
+});
+</script>
+</body>
+</html>
