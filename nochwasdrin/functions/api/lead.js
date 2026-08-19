@@ -13,6 +13,7 @@ export async function onRequestPost({ request, env }) {
   const clean = (value, max=220) => String(value ?? '').trim().slice(0,max);
   const contact = body?.contact || {};
   const answers = body?.answers || {};
+  const assessment = body?.assessment || {};
 
   const firstName = clean(contact.firstName, 80);
   const phone = clean(contact.phone, 40);
@@ -26,11 +27,18 @@ export async function onRequestPost({ request, env }) {
 
   const receivedAt = new Date().toISOString();
   const id = `lead:${Date.now()}:${crypto.randomUUID()}`;
+  const level = ['red','yellow','green'].includes(clean(assessment.level, 10)) ? clean(assessment.level,10) : '';
+  const scoreNum = Number(assessment.score);
   const lead = {
     id,
     receivedAt,
     source: clean(body?.source, 100) || 'nochwasdrin.pages.dev',
     pageVersion: clean(body?.pageVersion, 40),
+    assessment: {
+      level,
+      label: clean(assessment.label, 100),
+      score: Number.isFinite(scoreNum) ? Math.max(-100, Math.min(100, scoreNum)) : null
+    },
     contact: { firstName, phone, zip, email },
     answers: {
       netIncome: clean(answers.netIncome),
