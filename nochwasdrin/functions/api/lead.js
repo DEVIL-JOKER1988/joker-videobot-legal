@@ -7,7 +7,6 @@ export async function onRequestPost({ request, env }) {
 
   let body;
   try { body = await request.json(); } catch { return new Response(JSON.stringify({ ok:false, error:'invalid_json' }), { status:400, headers }); }
-
   if (String(body?.website || '').trim()) return new Response(JSON.stringify({ ok:true }), { status:200, headers });
 
   const clean = (value, max=220) => String(value ?? '').trim().slice(0,max);
@@ -16,12 +15,14 @@ export async function onRequestPost({ request, env }) {
   const assessment = body?.assessment || {};
 
   const firstName = clean(contact.firstName, 80);
+  const lastName = clean(contact.lastName, 80);
   const phone = clean(contact.phone, 40);
-  const zip = clean(contact.zip, 12);
   const email = clean(contact.email, 160);
+  const zip = clean(contact.zip, 12);
+  const city = clean(contact.city, 100);
   const consent = body?.consent === true;
 
-  if (!firstName || !phone || !zip || !consent) {
+  if (!firstName || !lastName || !phone || !email || !zip || !city || !consent) {
     return new Response(JSON.stringify({ ok:false, error:'missing_required_fields' }), { status:400, headers });
   }
 
@@ -39,7 +40,7 @@ export async function onRequestPost({ request, env }) {
       label: clean(assessment.label, 100),
       score: Number.isFinite(scoreNum) ? Math.max(-100, Math.min(100, scoreNum)) : null
     },
-    contact: { firstName, phone, zip, email },
+    contact: { firstName, lastName, phone, email, zip, city },
     answers: {
       netIncome: clean(answers.netIncome),
       incomeType: clean(answers.incomeType),
